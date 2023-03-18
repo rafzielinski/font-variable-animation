@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "parcel": "^2.8.3",
+    "splitting": "^1.0.6"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.8.3"
+  }
+}

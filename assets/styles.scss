@@ -1,0 +1,132 @@
+// @keyframes vars {
+//     0% {
+//        font-variation-settings: "MONO" 0, "CASL" 1, "CRSV" 0, "wght" 1000, "slnt" 0;
+//     }
+      
+//     25% {
+//      font-variation-settings: "MONO" 0, "CASL" 0, "CRSV" 0, "wght" 600, "slnt" 0;
+//     } 
+    
+//    50% {
+//       font-variation-settings: "MONO" 0, "CASL" 1, "CRSV" 0, "wght" 600, "slnt" -15;
+//     } 
+    
+//     75% {
+//       font-variation-settings: "MONO" 0, "CASL" 0, "CRSV" 1, "wght" 300, "slnt" -10;
+//     } 
+    
+//     100% {
+//       font-variation-settings: "MONO" 0, "CASL" 1, "CRSV" 0, "wght" 1000, "slnt" 0;
+//     }
+//   }
+  
+  
+//   @font-face {
+//     font-family: 'Recursive VF';
+//     font-style: oblique -15deg 0deg; 
+//     font-weight: 300 1000;
+//     font-display: swap;
+//     src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/13034/Recursive_VF_1.043--subset_range_english_basic.woff2') format('woff2');
+//   }
+  
+//   :root {
+//     --dur:10s;
+//   }
+  
+//   div {
+//     font-size: 3rem;
+//     font-variation-settings: "MONO" 0, "CASL" 0, "CRSV" 0, "wght" 1000, "slnt" 0;
+//       background: -webkit-linear-gradient(#FF29BF, #7100FF);
+//     -webkit-background-clip: text;
+//     -webkit-text-fill-color: transparent;
+//     color: #B000FF; 
+//     // will-change:font-variation-settings;
+    
+//     animation: vars var(--dur) infinite linear both;
+//   }
+  
+  
+  
+  
+//   body {
+//     display:flex;
+//     justify-content: center;
+//     align-items: center;
+//     height:100vh;
+//     width: 100vw;
+//   }
+
+@font-face {
+    font-family: "RobotoFlex";
+    src: url("./fonts/robotoFlex.ttf") format("truetype-variations");
+    font-weight: 100 1000;
+    /* font-stretch: 75% 125%; */
+    font-style: normal;
+}
+
+body {
+font-family: 'RobotoFlex', serif;
+font-size: 16px;
+
+}
+
+@mixin animate-font-variants($constant: '', $keyframes: (), $animation: '') {
+    $name: #{'anim-' + random(99999)};
+
+    @keyframes #{$name} {
+        $length: length($keyframes);
+        $perc: 100 / ($length - 1);
+
+        @for $i from 1 through $length {
+            $step: nth($keyframes, $i);
+
+            @if (type-of($step) == 'string') {
+                #{unquote($perc * ($i - 1) + "%")} {font-variation-settings: unquote($constant) + ', ' + unquote($step);}
+            } @else {
+                #{unquote(nth($step, 1))} {font-variation-settings: unquote($constant) + ', ' + unquote(nth($step, 2));}
+            }
+        }
+    };
+
+    font-variation-settings: unquote($constant) + ', ' + unquote(nth($keyframes, 1));
+
+    animation: $name unquote($animation);
+}
+
+.anim {
+--text-wght: 375;
+--text-wdth: 100;
+--text-opsz: 16;
+--text-GRAD: 88;
+
+font-size: 15rem;
+// font-variation-settings: 'wght' var(--text-wght), 'wdth' var(--text-wdth), 'opsz' var(--text-opsz), 'GRAD' var(--text-GRAD);
+// font-variation-settings: 'wght' 100;
+
+    .word {
+        .char {
+            &:nth-child(1) {
+                @include animate-font-variants(
+                $constant: "'wght' 200", 
+                $keyframes: ("'wdth' 25", ("40%", "'wdth' 100"), "'wdth' 50"), 
+                $animation: '5s infinite linear alternate both');
+            }
+
+            &:nth-child(2) {
+                @include animate-font-variants(
+                $constant: "'wdth' 25", 
+                $keyframes: ("'wght' 100", "'wght' 1000"), 
+                $animation: '5s infinite linear alternate both');
+            }
+            
+            &:nth-child(3) {
+                @include animate-font-variants(
+                $constant: "'wdth' 40",  
+                $keyframes: ("'wght' 100, 'slnt' 0", "'wght' 600, 'slnt' -10"), 
+                $animation: '5s infinite linear alternate both');
+            }
+
+            // animation-delay: calc(1s * var(--char-index));
+        }
+    }
+}

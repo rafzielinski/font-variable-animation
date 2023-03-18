@@ -1,0 +1,158 @@
+@font-face {
+  font-family: RobotoFlex;
+  src: url("robotoFlex.c3c52fc9.ttf") format("truetype-variations");
+  font-weight: 100 1000;
+  font-style: normal;
+}
+
+body {
+  font-family: RobotoFlex, serif;
+  font-size: 16px;
+}
+
+.anim {
+  --text-wght: 375;
+  --text-wdth: 100;
+  --text-opsz: 16;
+  --text-GRAD: 88;
+  font-size: 15rem;
+}
+
+.anim .word .char:nth-child(1) {
+  font-variation-settings: "wght" 200, "wdth" 25;
+  animation: 5s linear infinite alternate both anim-66100;
+}
+
+@keyframes anim-66100 {
+  0% {
+    font-variation-settings: "wght" 200, "wdth" 25;
+  }
+
+  40% {
+    font-variation-settings: "wght" 200, "wdth" 100;
+  }
+
+  100% {
+    font-variation-settings: "wght" 200, "wdth" 50;
+  }
+}
+
+.anim .word .char:nth-child(2) {
+  font-variation-settings: "wdth" 25, "wght" 100;
+  animation: 5s linear infinite alternate both anim-81197;
+}
+
+@keyframes anim-81197 {
+  0% {
+    font-variation-settings: "wdth" 25, "wght" 100;
+  }
+
+  100% {
+    font-variation-settings: "wdth" 25, "wght" 1000;
+  }
+}
+
+.anim .word .char:nth-child(3) {
+  font-variation-settings: "wdth" 40, "wght" 100, "slnt" 0;
+  animation: 5s linear infinite alternate both anim-82879;
+}
+
+@keyframes anim-82879 {
+  0% {
+    font-variation-settings: "wdth" 40, "wght" 100, "slnt" 0;
+  }
+
+  100% {
+    font-variation-settings: "wdth" 40, "wght" 600, "slnt" -10;
+  }
+}
+
+.splitting .word, .splitting .char {
+  display: inline-block;
+}
+
+.splitting .char {
+  position: relative;
+}
+
+.splitting .char:before, .splitting .char:after {
+  content: attr(data-char);
+  visibility: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.splitting {
+  --word-center: calc((var(--word-total)  - 1) / 2);
+  --char-center: calc((var(--char-total)  - 1) / 2);
+  --line-center: calc((var(--line-total)  - 1) / 2);
+}
+
+.splitting .word {
+  --word-percent: calc(var(--word-index) / var(--word-total));
+  --line-percent: calc(var(--line-index) / var(--line-total));
+}
+
+.splitting .char {
+  --char-percent: calc(var(--char-index) / var(--char-total));
+  --char-offset: calc(var(--char-index)  - var(--char-center));
+  --distance: calc((var(--char-offset) * var(--char-offset)) / var(--char-center));
+  --distance-sine: calc(var(--char-offset) / var(--char-center));
+  --distance-percent: calc((var(--distance) / var(--char-center)));
+}
+
+.splitting.cells img {
+  width: 100%;
+  display: block;
+}
+
+@supports (display: grid ) {
+  .splitting.cells {
+    visibility: hidden;
+    background-size: cover;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .splitting .cell-grid {
+    background: inherit;
+    width: 100%;
+    height: 100%;
+    grid-template: repeat(var(--row-total), 1fr) / repeat(var(--col-total), 1fr);
+    display: grid;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .splitting .cell {
+    background: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .splitting .cell-inner {
+    background: inherit;
+    visibility: visible;
+    width: calc(100% * var(--col-total));
+    height: calc(100% * var(--row-total));
+    left: calc(-100% * var(--col-index));
+    top: calc(-100% * var(--row-index));
+    position: absolute;
+  }
+
+  .splitting .cell {
+    --center-x: calc((var(--col-total)  - 1) / 2);
+    --center-y: calc((var(--row-total)  - 1) / 2);
+    --offset-x: calc(var(--col-index)  - var(--center-x));
+    --offset-y: calc(var(--row-index)  - var(--center-y));
+    --distance-x: calc((var(--offset-x) * var(--offset-x)) / var(--center-x));
+    --distance-y: calc((var(--offset-y) * var(--offset-y)) / var(--center-y));
+  }
+}
+
+/*# sourceMappingURL=index.a2cc9e2a.css.map */
