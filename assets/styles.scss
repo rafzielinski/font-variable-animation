@@ -64,69 +64,197 @@
     font-style: normal;
 }
 
+
+$fontVarsMin: ("wght": 100, "wdth": 25, "opsz": 8, "GRAD": -200, "slnt": -10, "XTRA": 323,
+"XOPQ": 27, "YOPQ": 25, "YTLC": 416, "YTUC": 528, "YTAS": 649, "YTDE": -305,
+"YTFI": 560);
+$fontVarsMax: ("wght": 1000, "wdth": 151, "opsz": 144, "GRAD": 150, "slnt": 0, "XTRA": 603,
+"XOPQ": 175, "YOPQ": 135, "YTLC": 570, "YTUC": 760, "YTAS": 854, "YTDE": -98,
+"YTFI": 788);
+
+
 body {
 font-family: 'RobotoFlex', serif;
 font-size: 16px;
 
+padding: 5rem 0;
+
+    display: flex; 
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    height: auto;
+    width: 100vw;
+}
+
+@function randomNum($min, $max) {
+    $rand: random();
+    @debug '--';
+    @debug $rand;
+    @debug $min;
+    @debug $max;
+    @debug '--';
+    $randomNum: $min + floor($rand * abs((($max - $min) + 1)));
+    
+    @return $randomNum;
 }
 
 @mixin animate-font-variants($constant: '', $keyframes: (), $animation: '') {
     $name: #{'anim-' + random(99999)};
 
+    @if($constant != ''){
+        $constant: $constant + ', ';
+    }
+
     @keyframes #{$name} {
         $length: length($keyframes);
         $perc: 100 / ($length - 1);
 
+        //
         @for $i from 1 through $length {
             $step: nth($keyframes, $i);
 
-            @if (type-of($step) == 'string') {
-                #{unquote($perc * ($i - 1) + "%")} {font-variation-settings: unquote($constant) + ', ' + unquote($step);}
+            // @debug '---';
+            // @debug $step;
+            // @debug type-of($step);
+    
+            // @debug '---';
+
+            // @if (type-of($step) == 'list') {
+                // #{unquote(nth($step, 1))} { font-variation-settings: unquote($constant) + unquote(nth($step, 2)); }
+            // } @else {
+
+            @if (type-of($step) == 'list') {
+                #{unquote($perc * ($i - 1) + "%")} { font-variation-settings: unquote($constant) + $step; }             
             } @else {
-                #{unquote(nth($step, 1))} {font-variation-settings: unquote($constant) + ', ' + unquote(nth($step, 2));}
+                #{unquote($perc * ($i - 1) + "%")} { font-variation-settings: unquote($constant) + unquote($step); }             
             }
         }
     };
 
-    font-variation-settings: unquote($constant) + ', ' + unquote(nth($keyframes, 1));
+    @if (type-of($keyframes) == 'list') {
+        font-variation-settings: unquote($constant) + nth($keyframes, 1);
+    } @else {
+        font-variation-settings: unquote($constant) + unquote(nth($keyframes, 1));
+    }
 
     animation: $name unquote($animation);
+    will-change: font-variation-settings;
+}
+
+.box {
+    position: relative;
+
+    width: 50vw;
+    height: 50vw;
+
+    background: pink;
 }
 
 .anim {
---text-wght: 375;
---text-wdth: 100;
---text-opsz: 16;
---text-GRAD: 88;
+    position: absolute;
+    top: 0;
+    left: 2rem;
 
-font-size: 15rem;
-// font-variation-settings: 'wght' var(--text-wght), 'wdth' var(--text-wdth), 'opsz' var(--text-opsz), 'GRAD' var(--text-GRAD);
-// font-variation-settings: 'wght' 100;
+    transform: translate(0, -50%);
+
+    font-size: 15rem;
+
+    cursor: pointer;
 
     .word {
         .char {
+            font-variation-settings: 'wdth' 25, 'wght' 100, 'wdth' 25, 'XTRA' 468, 'XOPQ' 100;
+        }
+    }
+}
+
+   .box:hover .word {
+        .char {
             &:nth-child(1) {
-                @include animate-font-variants(
-                $constant: "'wght' 200", 
-                $keyframes: ("'wdth' 25", ("40%", "'wdth' 100"), "'wdth' 50"), 
-                $animation: '5s infinite linear alternate both');
+                @include animate-font-variants( 
+                $keyframes: (
+                    //25-151, 323-603, 27-175
+                    "'wght' 25, 'wdth' 25, 'XTRA' 468, 'XOPQ' 100", 
+                    "'wght' 400, 'wdth' 100, 'XTRA' 468, 'XOPQ' 100", 
+                    "'wght' 400, 'wdth' 100, 'XTRA' 603, 'XOPQ' 100", 
+                    "'wght' 800, 'wdth' 100, 'XTRA' 603, 'XOPQ' 175", 
+                ), 
+                $animation: '3.5s 1 ease-in-out forwards');
             }
 
             &:nth-child(2) {
                 @include animate-font-variants(
                 $constant: "'wdth' 25", 
-                $keyframes: ("'wght' 100", "'wght' 1000"), 
-                $animation: '5s infinite linear alternate both');
+                $keyframes: ("'wght' 100", "'wght' 1000", "'wght' 1000", "'wght' 500"), 
+                $animation: '3s 1 ease-in-out forwards');
             }
             
             &:nth-child(3) {
                 @include animate-font-variants(
-                $constant: "'wdth' 40",  
-                $keyframes: ("'wght' 100, 'slnt' 0", "'wght' 600, 'slnt' -10"), 
-                $animation: '5s infinite linear alternate both');
+                $constant: "'wdth' 25",  
+                $keyframes: ("'wght' 100, 'slnt' 0", "'wght' 600, 'slnt' -10", "'wght' 200, 'slnt' -5"), 
+                $animation: '3.125s 1 ease-in-out forwards');
             }
-
-            // animation-delay: calc(1s * var(--char-index));
         }
     }
+
+
+@function randomValue($variant) {
+    $min: map-get($fontVarsMin, $variant);
+    $max: map-get($fontVarsMax, $variant);
+
+    @debug '--randomValue';
+    @debug $variant $min $max;
+    @debug '--';
+    $value: randomNum($min, $max);
+    
+    @return $value;
+}
+
+@mixin randomAnimation($variant: false, $variants: false, $animation: '') {
+    // $attrID: randomNum(1, length($fontVarsMax));
+    // $minValue: map-get($fontVarsMin, $variant);
+    // $maxValue: map-get($fontVarsMax, $variant);
+
+    // @debug randomNum($minValue, $maxValue);
+    
+
+    $keyframes: ();
+
+    @for $i from 1 through 5 {
+        $frame: '';
+
+        @if ($variants) { 
+            @debug '-------randomAnim';
+            @debug $variants;
+            
+            @each $v in $variants {
+                $frame: '#{$frame} "#{$v}" #{randomValue($v)},' ;
+            }
+
+            $frame: str-slice($frame, 2, -2);
+        } @else if ($variant) {
+            $frame: $variant randomValue($variant);
+        }
+
+        @debug $frame;
+        @debug '-------';
+        $keyframes: append($keyframes, $frame, auto);
+    }
+
+    $keyframes: append($keyframes, nth($keyframes, 1), auto);
+
+    @include animate-font-variants( 
+                $keyframes: $keyframes, // ($variant randomValue($variant), $variant randomValue($variant), $variant randomValue($variant), $variant randomValue($variant)), 
+                $animation: $animation);
+}
+
+.random {
+    font-size: 7rem;
+    
+    @include randomAnimation($variants: ('YTLC', 'YTAS', 'YTDE'), $animation: '2s infinite linear');
+    .char { animation-delay: calc(100ms * var(--char-index)); }
+    // @include randomAnimation($variants: ('wght', 'wdth', 'YTLC', 'YTAS', 'YTDE'), $animation: '5s infinite linear');
+    // @include randomAnimation($variants: ('wght', 'wdth'), $animation: '3s infinite linear');
 }
